@@ -2,18 +2,17 @@ import org.json4s.{DefaultFormats, Formats, _}
 import org.scalatra._
 import org.scalatra.json._
 
+case class Message(id: Int, text: String)
+
+case class CreateMessage(text: String)
+case class MessageCreated(id: Int)
+
+case class UpdateMessage(text: String)
+case class MessageUpdated(index: Int)
 
 class SimpleScalatraServlet extends ScalatraServlet with JacksonJsonSupport {
 
-        case class Message(id: Int, text: String)
-
-        case class CreateMessage(text: String)
-        case class MessageCreated(id: Int)
-
-        case class UpdateMessage(text: String)
-        case class MessageUpdated(index: Int)
-
-        protected implicit val jsonFormats: Formats = DefaultFormats
+        protected implicit lazy val jsonFormats: Formats = DefaultFormats
 
         //This collection represents a simple in-memory data source (i.e. it is mutable and not thread-safe)
         var messages: List[Message]  = List(
@@ -45,14 +44,13 @@ class SimpleScalatraServlet extends ScalatraServlet with JacksonJsonSupport {
         }
 
         post("/messages") {
-                //val messageData = parsedBody.extract[CreateMessage]
-                Ok(parsedBody.extract[CreateMessage])
-                /*val id = messages.foldLeft (0) ( (maxId, u) => if (u.id > maxId) u.id else maxId ) + 1
+                val messageData = parsedBody.extract[CreateMessage]
+                val id = messages.foldLeft (0) ( (maxId, u) => if (u.id > maxId) u.id else maxId ) + 1
 
                 val newMsg = Message(id, messageData.text)
                 messages = newMsg :: messages
 
-                MessageCreated(id)*/
+                MessageCreated(id)
         }
 
         put("/messages/:id") {
