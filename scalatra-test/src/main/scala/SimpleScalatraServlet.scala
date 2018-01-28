@@ -3,17 +3,19 @@ import org.json4s.{DefaultFormats, Formats}
 import org.scalatra._
 import org.scalatra.json._
 
+case class User(id: Int, name: String)
+
+case class CreateUser(name: String)
+case class UserCreated(id: Int)
+
+case class UpdateUser(name: String)
+case class UserUpdated(index: Int)
+
 class SimpleScalatraServlet extends ScalatraServlet with JacksonJsonSupport {
 
-        case class User(id: Int, name: String)
 
-        case class CreateUser(name: String)
-        case class UserCreated(id: Int)
 
-        case class UpdateUser(name: String)
-        case class UserUpdated(index: Int)
-
-        protected implicit val jsonFormats: Formats = DefaultFormats
+        protected implicit lazy val jsonFormats: Formats = DefaultFormats
 
         //This collection represents a simple in-memory data source (i.e. it is mutable and not thread-safe)
         var users: List[User]  = List(User(1, "John"), User(2, "Todd"), User(3, "Chris"))
@@ -27,6 +29,10 @@ class SimpleScalatraServlet extends ScalatraServlet with JacksonJsonSupport {
         }
 
         get("/users") {
+                users
+        }
+
+        get("/users/") {
                 users
         }
 
